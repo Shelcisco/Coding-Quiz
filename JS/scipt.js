@@ -68,6 +68,7 @@ const option_list = document.querySelector(".option_list");
 const time_line = document.querySelector("header .time_line");
 const timeText = document.querySelector(".timer .time_left_txt");
 const timeCount = document.querySelector(".timer .timer_sec");
+const score_btn = document.querySelector(".score button");
 
 // if startQuiz button clicked
 start_btn.onclick = () => {
@@ -82,7 +83,7 @@ exit_btn.onclick = () => {
 continue_btn.onclick = () => {
     info_box.classList.remove("activeInfo");
     quiz_box.classList.add("activeQuiz");
-    showQuetions(0);
+    showQuestions(0);
     queCounter(1);
 
     // startTimerLine function
@@ -105,7 +106,7 @@ restart_quiz.onclick = () => {
     que_numb = 1;
     userScore = 0;
     widthValue = 0;
-    showQuetions(que_count);
+    showQuestions(que_count);
     queCounter(que_numb);
     startTimer(timeValue);
     startTimerLine(widthValue);
@@ -119,12 +120,13 @@ quit_quiz.onclick = () => {
 const next_btn = document.querySelector("footer .next_btn");
 const bottom_ques_counter = document.querySelector("footer .total_que");
 
+
 // if Next Question button clicked
 next_btn.onclick = () => {
     if (que_count < questions.length - 1) {
         que_count++;
         que_numb++;
-        showQuetions(que_count);
+        showQuestions(que_count);
         queCounter(que_numb);
         timeText.textContent = "Time Left";
         next_btn.classList.remove("show");
@@ -133,7 +135,7 @@ next_btn.onclick = () => {
     }
 }
 // getting questions and options from array
-function showQuetions(index) {
+function showQuestions(index) {
     const que_text = document.querySelector(".que_text");
     let que_tag = '<span>' + questions[index].numb + ". " + questions[index].question + '</span>';
     let option_tag = '<div class="option"><span>' + questions[index].options[0] + '</span></div>'
