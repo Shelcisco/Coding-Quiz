@@ -27,8 +27,8 @@ let questions = [
         question: "Why do we use JavaScript?",
         answer: "To make web pages interactive",
         options: [
-            "To create the structure of a webpage",
-            "To make better coffee",
+            "To Create the Structure of a Webpage",
+            "To Make Better Coffee",
             "To make web pages interactive",
             "To make a page accessible"
         ]
@@ -68,12 +68,25 @@ const option_list = document.querySelector(".option_list");
 const time_line = document.querySelector("header .time_line");
 const timeText = document.querySelector(".timer .time_left_txt");
 const timeCount = document.querySelector(".timer .timer_sec");
-const score_btn = document.querySelector(".score button");
+const score_btn = document.querySelector ("#score");
+const in_input = document.querySelector ("#highscores")
+const scoreHistory = [];
+
+
+// startTimerLine function
+let time = 75;
+let que_count = 0;
+let que_numb = 1;
+let userScore = 0;
+let counter;
+let widthValue = 0;
+const restart_quiz = result_box.querySelector(".buttons .restart");
+const quit_quiz = result_box.querySelector(".buttons .quit");
 
 // if startQuiz button clicked
 start_btn.onclick = () => {
     info_box.classList.add("activeInfo");
-    startTimer(75);
+    startTimer();
 }
 // if exitQuiz button clicked
 exit_btn.onclick = () => {
@@ -85,30 +98,28 @@ continue_btn.onclick = () => {
     quiz_box.classList.add("activeQuiz");
     showQuestions(0);
     queCounter(1);
-
-    // startTimerLine function
 }
-let timeValue = 75;
-let que_count = 0;
-let que_numb = 1;
-let userScore = 0;
-let counter;
-let widthValue = 0;
-const restart_quiz = result_box.querySelector(".buttons .restart");
-const quit_quiz = result_box.querySelector(".buttons .quit");
+
+// // if SaveScore button clicked
+// score_btn.onclick = () => {
+//     result_box.classList.remove("activeResult");
+//     high_score.classList.add("highscores")
+
+// }
+
 
 // if restartQuiz button clicked
 restart_quiz.onclick = () => {
     quiz_box.classList.add("activeQuiz");
     result_box.classList.remove("activeResult");
-    timeValue = 75;
+    time = 75;
     que_count = 0;
     que_numb = 1;
     userScore = 0;
     widthValue = 0;
     showQuestions(que_count);
     queCounter(que_numb);
-    startTimer(timeValue);
+    startTimer();
     startTimerLine(widthValue);
     timeText.textContent = "Time Left";
     next_btn.classList.remove("show");
@@ -119,6 +130,8 @@ quit_quiz.onclick = () => {
 }
 const next_btn = document.querySelector("footer .next_btn");
 const bottom_ques_counter = document.querySelector("footer .total_que");
+
+
 
 
 // if Next Question button clicked
@@ -168,6 +181,7 @@ function optionSelected(answer) {
         console.log("Your correct answers = " + userScore);
     } else {
         answer.classList.add("incorrect");
+        time -= 10
         answer.insertAdjacentHTML("beforeend", crossIconTag);
         console.log("Wrong Answer");
         for (i = 0; i < allOptions; i++) {
@@ -203,7 +217,7 @@ function showResult() {
     }
 }
 //Timer Functions
-function startTimer(time) {
+function startTimer() {
     counter = setInterval(timer, 1000);
     function timer() {
         timeCount.textContent = time;
@@ -213,6 +227,8 @@ function startTimer(time) {
             timeCount.textContent = "0" + addZero;
         }
         if (time < 0) {
+            clearInterval(counter)
+            showResult()
             timeText.textContent = "Time Off";
             const allOptions = option_list.children.length;
             let correcAns = questions[que_count].answer;
@@ -230,19 +246,44 @@ function startTimer(time) {
         }
     }
 }
-function startTimerLine(time) {
-    counterLine = setInterval(timer, 29);
-    function timer() {
-        time += 1;
-        time_line.style.width = time + "px";
-        if (time > 549) {
-
-        }
-    }
-}
 //Function for Question/Score Counter 
 function queCounter(index) {
     let totalQueCounTag = '<span><p>' + index + '</p> of <p>' + questions.length + '</p> Questions</span>';
     bottom_ques_counter.innerHTML = totalQueCounTag;
 }
+
+// //Save Score/Initial
+
+// score_btn.on ("click", function (event) {
+//     event.preventDefault();
+  
+//     if (que_count.val() == 0 || in_input.val() == 0) {
+//       return false;
+// }
+  
+//     const searchValue = que_count.val();
+//     console.log(searchValue);
+//     console.log(in_input.val());
+
+// // Saves the search history of cities to an array
+// function history (in_input, searchValue) {
+//     if (locationInputEl && searchValue) {
+//       if (scoreHistory.indexOf(in_input + " " + searchValue) === -1) {
+//         scoreHistory.push(in_input + " " + searchValue);
+//         listArray();
+//       }
+//     }
+//   }
+  
+// //   // Lists array of search history
+// function listArray() {
+//  searchHistoryListEl.empty();
+// searchHistory.forEach(function (findings) {
+// const searchHistoryItem = $('<p class="list-group-item">');
+//  searchHistoryItem.attr("data-value", findings);
+// searchHistoryItem.text(findings);
+// searchHistoryListEl.prepend(searchHistoryItem);
+// });
+// localStorage.setItem("searches", JSON.stringify(searchHistory));
+//   }
 
