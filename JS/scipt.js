@@ -1,3 +1,5 @@
+
+
 // Questions
 let questions = [
     {
@@ -99,13 +101,6 @@ continue_btn.onclick = () => {
     showQuestions(0);
     queCounter(1);
 }
-
-// // if SaveScore button clicked
-// score_btn.onclick = () => {
-//     result_box.classList.remove("activeResult");
-//     high_score.classList.add("highscores")
-
-// }
 
 
 // if restartQuiz button clicked
@@ -252,38 +247,64 @@ function queCounter(index) {
     bottom_ques_counter.innerHTML = totalQueCounTag;
 }
 
-// //Save Score/Initial
-
-// score_btn.on ("click", function (event) {
-//     event.preventDefault();
+// Retrieve scores from local storage
+window.addEventListener('load', () => {
+    loadScores();
+  });
   
-//     if (que_count.val() == 0 || in_input.val() == 0) {
-//       return false;
-// }
+  // Save score to local storage
+  function saveScore(score, initials) {
+    const scores = localStorage.getItem("scores");
+    if (scores) {
+      const parsedScores = JSON.parse(scores);
+      parsedScores.push({ score, initials });
+      localStorage.setItem("scores", JSON.stringify(parsedScores));
+    } else {
+      localStorage.setItem("scores", JSON.stringify([{ score, initials }]));
+    }
+  }
   
-//     const searchValue = que_count.val();
-//     console.log(searchValue);
-//     console.log(in_input.val());
-
-// // Saves the search history of cities to an array
-// function history (in_input, searchValue) {
-//     if (locationInputEl && searchValue) {
-//       if (scoreHistory.indexOf(in_input + " " + searchValue) === -1) {
-//         scoreHistory.push(in_input + " " + searchValue);
-//         listArray();
-//       }
-//     }
-//   }
+  // Load scores from local storage
+  function loadScores() {
+    const scores = localStorage.getItem("scores");
+    if (scores) {
+      const parsedScores = JSON.parse(scores);
+      displayScores(parsedScores);
+    }
+  }
   
-// //   // Lists array of search history
-// function listArray() {
-//  searchHistoryListEl.empty();
-// searchHistory.forEach(function (findings) {
-// const searchHistoryItem = $('<p class="list-group-item">');
-//  searchHistoryItem.attr("data-value", findings);
-// searchHistoryItem.text(findings);
-// searchHistoryListEl.prepend(searchHistoryItem);
-// });
-// localStorage.setItem("searches", JSON.stringify(searchHistory));
-//   }
-
+  // Display scores
+  function displayScores(scores) {
+    const highScoresList = document.getElementById("highScoresList");
+    highScoresList.innerHTML = ""; // Clear previous scores
+    scores.forEach((entry) => {
+      const scoreItem = document.createElement("a");
+      scoreItem.textContent = `${entry.initials}: ${entry.score}`;
+      highScoresList.appendChild(scoreItem);
+    });
+  }
+  
+  // Clear scores from local sotrage/highscore list 
+  function clearScores() {
+    localStorage.removeItem("scores");
+    const highScoresList = document.getElementById("highScoresList");
+    highScoresList.innerHTML = ""; // Clear the displayed scores
+  }
+  
+  // Event listener for Save Score button
+  const saveScoreBtn = document.querySelector(".score");
+  saveScoreBtn.addEventListener("click", () => {
+    const scoreText = document.querySelector(".score_text p");
+    const initialsInput = document.querySelector("#highscores");
+    const score = parseInt(scoreText.textContent);
+    const initials = initialsInput.value;
+    saveScore(score, initials)
+    initialsInput.value = "";
+  });
+  
+  // Event listener for Delete Scores button
+  const deleteScoresBtn = document.querySelector(".delscores");
+  deleteScoresBtn.addEventListener("click", () => {
+    clearScores();
+  });
+  
